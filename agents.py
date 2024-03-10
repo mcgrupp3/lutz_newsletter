@@ -1,6 +1,15 @@
+import os
 from crewai import Agent
 from tools.search_tools import SearchTools
+from langchain_google_genai import ChatGoogleGenerativeAI
+from decouple import config
 
+from dotenv import load_dotenv
+load_dotenv()
+
+llm = ChatGoogleGenerativeAI(model="gemini-pro")
+
+# os.environ["GOOGLE_API_KEY"] = config("GOOGLE_API_KEY")
 
 class AINewsLetterAgents():
     def editor_agent(self):
@@ -11,7 +20,8 @@ class AINewsLetterAgents():
             not only informs but also engages and inspires the readers. """,
             allow_delegation=True,
             verbose=True,
-            max_iter=15
+            max_iter=15,
+            llm=llm
         )
 
     def news_fetcher_agent(self):
@@ -23,6 +33,7 @@ class AINewsLetterAgents():
             tools=[SearchTools.search_internet],
             verbose=True,
             allow_delegation=True,
+            llm=llm
         )
 
     def news_analyzer_agent(self):
@@ -34,6 +45,7 @@ class AINewsLetterAgents():
             tools=[SearchTools.search_internet],
             verbose=True,
             allow_delegation=True,
+            llm=llm
         )
 
     def newsletter_compiler_agent(self):
@@ -44,4 +56,5 @@ class AINewsLetterAgents():
             ensuring a coherent and visually appealing presentation that captivates our readers. Make sure to follow
             newsletter format guidelines and maintain consistency throughout.""",
             verbose=True,
+            llm=llm
         )
